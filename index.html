@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>আরব জাতিগোষ্ঠী পরিচিতি</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --emerald:#047857;
+  --emerald-dark:#064E3B;
+  --purple:#9333EA;
+  --blue:#407cde;
+  --orange:#EA580C;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Noto Sans Bengali',sans-serif;
+  background:#f8fafc;
+  overflow:hidden;
+  color:#1e293b;
+}
+
+/* HEADER */
+header{
+  position:absolute;top:0;left:0;right:0;
+  z-index:20;
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid #e5e7eb;
+  padding:12px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h1{margin:0;font-size:20px}
+header p{margin:2px 0 0;font-size:12px;color:#64748b}
+
+/* CONTROLS */
+.controls{
+  position:absolute;
+  bottom:24px;left:24px;
+  z-index:20;
+  background:white;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.controls button{
+  display:block;
+  padding:12px;
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:18px;
+}
+.controls button:hover{background:#f1f5f9}
+
+/* LEGEND */
+.legend{
+  position:absolute;
+  top:96px;left:24px;
+  z-index:20;
+  background:rgba(255,255,255,.9);
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  padding:12px;
+  font-size:12px;
+}
+.legend div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.legend span{width:12px;height:12px;border-radius:50%}
+
+/* CANVAS */
+#container{
+  position:absolute;
+  inset:0;
+  cursor:grab;
+}
+#container.dragging{cursor:grabbing}
+#canvas{
+  position:absolute;
+  transform-origin:0 0;
+}
+svg{position:absolute;overflow:visible}
+
+/* NODE */
+.node{
+  position:absolute;
+  width:150px;
+  height:65px;
+  padding:6px;
+  border-radius:8px;
+  border:2px solid;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.node:hover{
+  transform:scale(1.12);
+  background:#f59e0b!important;
+  border-color:#f59e0b!important;
+  color:white!important;
+  z-index:50;
+}
+.node.selected{
+  transform:scale(1.12);
+  z-index:40;
+}
+.node.glow{
+  box-shadow:0 0 22px rgba(16,185,129,.75);
+}
+
+/* DRAWER */
+#drawer{
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:360px;
+  background:white;
+  z-index:50;
+  border-left:1px solid #e5e7eb;
+  box-shadow:-10px 0 30px rgba(0,0,0,.2);
+  display:none;
+  flex-direction:column;
+}
+#drawer header{
+  position:relative;
+  background:var(--emerald);
+  color:white;
+}
+#drawer .content{
+  padding:20px;
+  overflow:auto;
+  flex:1;
+}
+.badge{
+  display:inline-block;
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  border-radius:999px;
+  padding:4px 10px;
+  font-size:12px;
+  margin:4px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <h1>আরব জাতিগোষ্ঠী পরিচিতি</h1>
+    <p>PDF সোর্স ভিত্তিক বংশলতিকা</p>
+  </div>
+</header>
+
+<div class="controls">
+  <button onclick="zoom(0.1)">＋</button>
+  <button onclick="zoom(-0.1)">－</button>
+  <button onclick="resetView()">⟲</button>
+</div>
+
+<div class="legend">
+  <div><span style="background:#9333EA"></span> বায়িদাহ</div>
+  <div><span style="background:#407cde"></span> আরিবা</div>
+  <div><span style="background:#EA580C"></span> মুস্তারিবা</div>
+  <div><span style="border:2px dashed #10b981"></span> বংশ বিরতি</div>
+  <div><span style="background:#10b981"></span> নবী বংশ</div>
+</div>
+
+<div id="container">
+  <div id="canvas"></div>
+</div>
+
+<div id="drawer">
+  <header>
+    <button onclick="closeDrawer()" style="float:right;background:none;border:none;color:white;font-size:20px">✕</button>
+    <h2 id="dTitle"></h2>
+  </header>
+  <div class="content">
+    <p id="dInfo"></p>
+    <div id="dChildren"></div>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const rawData = /* YOUR FULL rawData OBJECT HERE — UNCHANGED */ 
+/* PASTE THE rawData OBJECT FROM YOUR CODE EXACTLY */
+
+/* ================= CONSTANTS ================= */
+const NODE_W=150, NODE_H=65, V_GAP=100, H_GAP=40;
+
+/* ================= LAYOUT ENGINE ================= */
+function layout(node, depth=0){
+  if(!node.children) node.children=[];
+  let totalW=NODE_W;
+  const kids=node.children.map(c=>layout(c,depth+1));
+  if(kids.length){
+    totalW=kids.reduce((a,c)=>a+c.totalW+H_GAP,0)-H_GAP;
+  }
+  return {...node,depth,totalW,children:kids};
+}
+function position(node,x){
+  let cx=x;
+  node.children.forEach(c=>{
+    position(c,cx);
+    cx+=c.totalW+H_GAP;
+  });
+  node.x=x+node.totalW/2-NODE_W/2;
+  node.y=node.depth*(NODE_H+V_GAP);
+}
+const tree=layout(rawData);
+position(tree,0);
+
+/* ================= FLATTEN ================= */
+const nodes=[],edges=[];
+(function walk(n){
+  nodes.push(n);
+  n.children.forEach(c=>{
+    edges.push({a:n,b:c});
+    walk(c);
+  });
+})(tree);
+
+/* ================= RENDER ================= */
+const canvas=document.getElementById("canvas");
+const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+canvas.appendChild(svg);
+
+edges.forEach(e=>{
+  const p=document.createElementNS(svg.namespaceURI,"path");
+  const x1=e.a.x+NODE_W/2,y1=e.a.y+NODE_H;
+  const x2=e.b.x+NODE_W/2,y2=e.b.y;
+  p.setAttribute("d",`M${x1},${y1} C${x1},${y1+60} ${x2},${y2-60} ${x2},${y2}`);
+  p.setAttribute("fill","none");
+  p.setAttribute("stroke","#94a3b8");
+  p.setAttribute("stroke-width","2");
+  svg.appendChild(p);
+});
+
+nodes.forEach(n=>{
+  const d=document.createElement("div");
+  d.className="node";
+  d.style.left=n.x+"px";
+  d.style.top=n.y+"px";
+  d.style.background=color(n.type);
+  d.style.borderColor=color(n.type,true);
+  if(n.type==="prophet") d.classList.add("glow");
+  d.innerHTML=n.name;
+  d.onclick=e=>{e.stopPropagation();openDrawer(n,d)};
+  canvas.appendChild(d);
+});
+
+/* ================= PAN + ZOOM ================= */
+let scale=.5,ox=200,oy=100,drag=false,sx,sy;
+const container=document.getElementById("container");
+function update(){canvas.style.transform=`translate(${ox}px,${oy}px) scale(${scale})`}
+update();
+
+container.onmousedown=e=>{drag=true;container.classList.add("dragging");sx=e.clientX-ox;sy=e.clientY-oy};
+container.onmousemove=e=>{if(drag){ox=e.clientX-sx;oy=e.clientY-sy;update()}};
+container.onmouseup=()=>{drag=false;container.classList.remove("dragging")};
+container.onmouseleave=()=>drag=false;
+container.onwheel=e=>{e.preventDefault();zoom(-e.deltaY*0.001)};
+function zoom(d){scale=Math.min(3,Math.max(.05,scale+d));update()}
+function resetView(){scale=.5;ox=200;oy=100;update()}
+
+/* ================= DRAWER ================= */
+function openDrawer(n,el){
+  document.querySelectorAll(".node").forEach(x=>x.classList.remove("selected"));
+  el.classList.add("selected");
+  drawer.style.display="flex";
+  dTitle.innerText=n.name;
+  dInfo.innerText=n.details?.info||"এই নোডের জন্য অতিরিক্ত তথ্য নেই।";
+  dChildren.innerHTML="";
+  n.children.forEach(c=>{
+    const b=document.createElement("span");
+    b.className="badge";
+    b.innerText=c.name;
+    dChildren.appendChild(b);
+  });
+}
+function closeDrawer(){drawer.style.display="none"}
+
+/* ================= COLOR ================= */
+function color(t,border){
+  const map={
+    root:"#064E3B",
+    bayidah:"#9333EA",
+    ariba:"#407cde",
+    mustariba:"#EA580C",
+    prophet:"#047857",
+    "prophet-line":"#10b981"
+  };
+  return map[t]||"#64748b";
+}
+</script>
+</body>
+</html>
