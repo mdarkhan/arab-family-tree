@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>আরব জাতিগোষ্ঠী পরিচিতি</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,16 +16,20 @@ body{
   overflow:hidden;
   color:#1e293b;
 }
+
+/* HEADER */
 header{
-  position:absolute;top:0;left:0;right:0;
+  position:absolute;
+  top:0;left:0;right:0;
+  z-index:20;
   background:#ffffffee;
   border-bottom:1px solid #e5e7eb;
   padding:12px 24px;
-  z-index:10;
 }
 header h1{margin:0;font-size:20px}
 header p{margin:2px 0 0;font-size:12px;color:#64748b}
 
+/* CANVAS */
 #container{
   position:absolute;
   inset:0;
@@ -44,6 +48,7 @@ svg{
   overflow:visible;
 }
 
+/* NODE */
 .node{
   position:absolute;
   width:150px;
@@ -63,13 +68,13 @@ svg{
   z-index:50;
   background:#f59e0b!important;
   border-color:#f59e0b!important;
-  color:#fff!important;
+  color:white!important;
 }
-
 .node.prophet{
-  box-shadow:0 0 20px rgba(16,185,129,.7);
+  box-shadow:0 0 22px rgba(16,185,129,.7);
 }
 
+/* DRAWER */
 #drawer{
   position:absolute;
   top:0;right:0;bottom:0;
@@ -79,11 +84,12 @@ svg{
   box-shadow:-8px 0 24px rgba(0,0,0,.2);
   display:none;
   flex-direction:column;
-  z-index:20;
+  z-index:30;
 }
 #drawer header{
   background:#047857;
   color:white;
+  padding:12px;
 }
 #drawer .content{
   padding:16px;
@@ -105,7 +111,7 @@ svg{
 
 <header>
   <h1>আরব জাতিগোষ্ঠী পরিচিতি</h1>
-  <p>PDF সোর্স ভিত্তিক বংশলতিকা</p>
+  <p>PDF সোর্স ভিত্তিক পূর্ণ বংশলতিকা</p>
 </header>
 
 <div id="container">
@@ -113,8 +119,8 @@ svg{
 </div>
 
 <div id="drawer">
-  <header style="padding:12px">
-    <button onclick="drawer.style.display='none'" style="float:right;background:none;border:none;color:white;font-size:18px">✕</button>
+  <header>
+    <button onclick="closeDrawer()" style="float:right;background:none;border:none;color:white;font-size:18px">✕</button>
     <h3 id="dTitle"></h3>
   </header>
   <div class="content">
@@ -124,26 +130,390 @@ svg{
 </div>
 
 <script>
-/* ================= DATA ================= */
+/* ================= FULL ORIGINAL DATA (UNCHANGED) ================= */
 const rawData = {
-  name:"আরব জাতিগোষ্ঠী",
-  type:"root",
-  children:[
-    {name:"আরবে বায়িদাহ",type:"bayidah"},
-    {name:"আরবে আরিবা",type:"ariba"},
+  id: "root",
+  name: "আরব জাতিগোষ্ঠী",
+  type: "root",
+  details: {
+    info: "ঐতিহাসিক সূত্র মতে, বংশ পরিক্রমা অনুসারে সমগ্র আরব জাতি প্রধানত তিন ভাগে বিভক্ত। আরবের ভৌগোলিক অবস্থান সাগর ও পাহাড় বেষ্টিত এক প্রাকৃতিক দুর্গ।",
+    location: "আরব উপদ্বীপ (১০-১৩ লক্ষ বর্গমাইল)"
+  },
+  children: [
     {
-      name:"আরবে মুস্তারিবা",
-      type:"mustariba",
-      children:[
+      id: "bayidah",
+      name: "আরবে বায়িদাহ",
+      type: "bayidah",
+      details: {
+        info: "এরা হলো প্রাচীন আরব জাতি। ধরাপৃষ্ঠ হতে এদের অস্তিত্ব প্রায় নিঃশেষ হয়ে গিয়েছে। ইতিহাসের পাতায় এদের খুব বেশি তথ্য পাওয়া যায় না।"
+      },
+      children: [
+        { name: "আদ", type: "bayidah", details: { info: "প্রাচীন ধংসপ্রাপ্ত জাতি।" } },
+        { name: "ছামুদ", type: "bayidah", details: { info: "প্রাচীন ধংসপ্রাপ্ত জাতি।" } },
+        { name: "আমালিকা", type: "bayidah" },
+        { name: "জুরহুম (প্রাচীন)", type: "bayidah", details: { info: "প্রাচীন জুরহুম গোত্র।" } },
+        { name: "হাজরা মাউত", type: "bayidah", details: { location: "দক্ষিণ আরব" } }
+      ]
+    },
+    {
+      id: "ariba",
+      name: "আরবে আরিবা",
+      type: "ariba",
+      details: {
+        info: "এরা কাহতানি আরব। মূল অবস্থান ইয়ামান (দক্ষিণ আরব)।",
+        location: "ইয়ামান"
+      },
+      children: [
         {
-          name:"ইব্রাহিম (আ.)",
-          type:"prophet",
-          children:[
-            {name:"ইসমাঈল (আ.)",type:"prophet",
-              children:[
-                {name:"আদনান",type:"mustariba",
-                  children:[
-                    {name:"মুহাম্মাদ ﷺ",type:"prophet"}
+          name: "কাহতান",
+          type: "ariba",
+          children: [
+            {
+              name: "ইয়ারুব",
+              type: "ariba",
+              children: [
+                {
+                  name: "ইয়াশজুব",
+                  type: "ariba",
+                  children: [
+                    {
+                      name: "সাবা",
+                      type: "ariba",
+                      details: { info: "প্রাচীন ইয়ামান রাজ্যের রাজধানী এঁর নামেই। রানী বিলকিস এই বংশের।" },
+                      children: [
+                        {
+                          name: "হিময়ার",
+                          type: "ariba",
+                          children: [
+                            { name: "যাইদুল জুরহুম", type: "ariba" },
+                            { name: "কুজ'আ", type: "ariba" },
+                            { name: "সাকাসিক", type: "ariba" }
+                          ]
+                        },
+                        {
+                          name: "কাহলান",
+                          type: "ariba",
+                          children: [
+                            {
+                              name: "আযদ",
+                              type: "ariba",
+                              children: [
+                                {
+                                  name: " আমর আল মুযাইকিয়া",
+                                  type: "ariba",
+                                  children: [
+                                    {
+                                      name: "সা'লাবা",
+                                      type: "ariba",
+                                      children: [
+                                        {
+                                          name: "হারিসা",
+                                          type: "ariba",
+                                          children: [
+                                            { name: "আউস", type: "ariba" },
+                                            { name: "খাযরাজ", type: "ariba" }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      name: "হারিসা (খুযা'আ)",
+                                      type: "ariba",
+                                      children: [
+                                        { 
+                                          name: "লুহাই", 
+                                          type: "ariba",
+                                          children: [
+                                            { 
+                                              name: "আমর", 
+                                              type: "ariba",
+                                              details: { info: "তিনি সর্বপ্রথম মক্কায় মূর্তিপূজা চালু করেন।" }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    { name: "ইমরান", type: "ariba", children: [{ name: "আযদে ওমানি", type: "ariba" }] },
+                                    { name: "জাফনা", type: "ariba", children: [{ name: "গাসসান গোত্র", type: "ariba" }] }
+                                  ]
+                                }
+                              ]
+                            },
+                            { name: "লাখম", type: "ariba" },
+                            { name: "তাঈ", type: "ariba" },
+                            { name: "কিনদা", type: "ariba" }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  name: "জুরহুম (দ্বিতীয়)",
+                  type: "ariba",
+                  details: { info: "মক্কায় বসবাস শুরু করেন। ইসমাঈল (আ.) এঁর থেকে আরবি শেখেন।" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "mustariba",
+      name: "আরবে মুস্তারিবা",
+      type: "mustariba",
+      details: {
+        info: "এরা ইসমাঈল বিন ইব্রাহিম (আ.) এর বংশধারা। এদের আদনানি আরবও বলা হয়."
+      },
+      children: [
+        {
+          name: "ইব্রাহিম (আ.)",
+          type: "prophet-ancestor",
+          children: [
+            {
+              name: "ইসমাঈল (আ.)",
+              type: "prophet-ancestor",
+              children: [
+                { name: "নাবিত", type: "mustariba" },
+                {
+                  name: "কাইদার",
+                  type: "prophet-line",
+                  children: [
+                    {
+                      id: "gap-ismail-adnan",
+                      name: "৪০+ প্রজন্মের ব্যবধান",
+                      type: "gap-green",
+                      children: [
+                        {
+                          name: "আদনান",
+                          type: "prophet-line",
+                          children: [
+                            {
+                              name: "মা'আদ",
+                              type: "prophet-line",
+                              children: [
+                                {
+                                  name: "নাযার",
+                                  type: "prophet-line",
+                                  children: [
+                                    { name: "ইয়াদ", type: "mustariba" },
+                                    { name: "আনমার", type: "mustariba" },
+                                    {
+                                      name: "রবি'আ",
+                                      type: "mustariba",
+                                      children: [
+                                        { 
+                                          name: "আসাদ", 
+                                          type: "mustariba",
+                                          children: [
+                                            { name: "আনযাহ", type: "mustariba" },
+                                            { 
+                                              name: "জালীদাহ", 
+                                              type: "mustariba",
+                                              children: [
+                                                { name: "বনু আব্দে কায়েস", type: "mustariba" },
+                                                { 
+                                                  name: "বনু ওয়ায়িল", 
+                                                  type: "mustariba",
+                                                  children: [
+                                                    { name: "বনু তাগলিব", type: "mustariba" },
+                                                    { 
+                                                      name: "বনু বকর", 
+                                                      type: "mustariba",
+                                                      children: [{ name: "বনু হানিফা", type: "mustariba" }]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      name: "মুদার",
+                                      type: "prophet-line",
+                                      children: [
+                                        { name: "কাইস আইলান", type: "mustariba" },
+                                        {
+                                          name: "ইলিয়াস",
+                                          type: "prophet-line",
+                                          children: [
+                                            {
+                                              name: "মুদরিকা",
+                                              type: "prophet-line",
+                                              children: [
+                                                {
+                                                  name: "খুযাইমা",
+                                                  type: "prophet-line",
+                                                  children: [
+                                                    {
+                                                      name: "আসাদ",
+                                                      type: "prophet-line",
+                                                      children: [
+                                                        {
+                                                          name: "কিনানাহ (কুরাইশ)",
+                                                          type: "prophet-line",
+                                                          children: [
+                                                            {
+                                                              name: "আন-নাদর",
+                                                              type: "prophet-line",
+                                                              children: [
+                                                                {
+                                                                  name: "মালিক",
+                                                                  type: "prophet-line",
+                                                                  children: [
+                                                                    {
+                                                                      name: "ফিহর (কুরাইশ)",
+                                                                      type: "prophet-line",
+                                                                      children: [
+                                                                        {
+                                                                          name: "গালিব",
+                                                                          type: "prophet-line",
+                                                                          children: [
+                                                                            {
+                                                                              name: "লুওয়াই",
+                                                                              type: "prophet-line",
+                                                                              children: [
+                                                                                {
+                                                                                  name: "কা'আব",
+                                                                                  type: "prophet-line",
+                                                                                  children: [
+                                                                                    {
+                                                                                      name: "মুররা",
+                                                                                      type: "prophet-line",
+                                                                                      children: [
+                                                                                        {
+                                                                                          name: "ইয়াকাজ",
+                                                                                          type: "mustariba",
+                                                                                          children: [{ name: "বনু মাখজুম", type: "mustariba", children: [{ name: "আবু জাহল", type: "mustariba" }] }]
+                                                                                        },
+                                                                                        {
+                                                                                          name: "কিলাব",
+                                                                                          type: "prophet-line",
+                                                                                          children: [
+                                                                                            {
+                                                                                              name: "যুহরা",
+                                                                                              type: "mustariba",
+                                                                                              details: { info: "বনী যুহরা গোত্রের প্রতিষ্ঠাতা। নবীজির মাতৃকুল।" },
+                                                                                              children: [
+                                                                                                {
+                                                                                                  name: "আব্দে মানাফ",
+                                                                                                  type: "mustariba",
+                                                                                                  children: [
+                                                                                                    {
+                                                                                                      name: "ওয়াহহাব",
+                                                                                                      type: "mustariba",
+                                                                                                      children: [{ name: "আমেনা", type: "mustariba", details: { info: "নবীজি (সা.)-এর রত্নগর্ভা মাতা।" } }]
+                                                                                                    }
+                                                                                                  ]
+                                                                                                }
+                                                                                              ]
+                                                                                            },
+                                                                                            {
+                                                                                              name: "কুসাই",
+                                                                                              type: "prophet-line",
+                                                                                              children: [
+                                                                                                { name: "আব্দুদ দার", type: "mustariba" },
+                                                                                                { name: "আব্দ", type: "mustariba" },
+                                                                                                { 
+                                                                                                  name: "আব্দুল উজ্জা", 
+                                                                                                  type: "mustariba", 
+                                                                                                  children: [
+                                                                                                    { 
+                                                                                                      name: "আসাদ", 
+                                                                                                      type: "mustariba", 
+                                                                                                      children: [
+                                                                                                        { 
+                                                                                                          name: "খুওয়াইলিদ", 
+                                                                                                          type: "mustariba", 
+                                                                                                          children: [{name: "খাদিজা (রাঃ)", type: "mustariba"}] 
+                                                                                                        },
+                                                                                                        { name: "নওফেল", type: "mustariba" }
+                                                                                                      ] 
+                                                                                                    }
+                                                                                                  ] 
+                                                                                                },
+                                                                                                { 
+                                                                                                  name: "আব্দে মানাফ", 
+                                                                                                  type: "prophet-line", 
+                                                                                                  children: [
+                                                                                                    { name: "নওফেল", type: "mustariba" },
+                                                                                                    { name: "মুত্তালিব", type: "mustariba" },
+                                                                                                    { 
+                                                                                                      name: "আব্দে শামস", 
+                                                                                                      type: "mustariba",
+                                                                                                      children: [
+                                                                                                        { 
+                                                                                                          name: "উমাইয়া", 
+                                                                                                          type: "mustariba", 
+                                                                                                          children: [
+                                                                                                            { 
+                                                                                                              name: "আবুল আস", 
+                                                                                                              type: "mustariba", 
+                                                                                                              children: [{ name: "আফফান" }, { name: "হাকাম" }] 
+                                                                                                            },
+                                                                                                            { 
+                                                                                                              name: "হারব", 
+                                                                                                              type: "mustariba", 
+                                                                                                              children: [{ name: "আবু সুফিয়ান" }] 
+                                                                                                            }
+                                                                                                          ] 
+                                                                                                        }
+                                                                                                      ] 
+                                                                                                    },
+                                                                                                    { 
+                                                                                                      name: "হাশিম", 
+                                                                                                      type: "prophet-line", 
+                                                                                                      children: [
+                                                                                                        { name: "আব্দুল মুত্তালিব", type: "prophet-line", children: [
+                                                                                                          { name: "আব্দুল্লাহ", type: "prophet-line", children: [
+                                                                                                            { name: "মুহাম্মাদ ﷺ", type: "prophet", details: { info: "আল্লাহর রাসূল এবং সর্বশেষ নবী।" } }
+                                                                                                          ] }
+                                                                                                        ] }
+                                                                                                      ] 
+                                                                                                    }
+                                                                                                  ] 
+                                                                                                }
+                                                                                              ] 
+                                                                                            }
+                                                                                          ]
+                                                                                        }
+                                                                                      ]
+                                                                                    }
+                                                                                  ]
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 }
               ]
@@ -154,11 +524,9 @@ const rawData = {
     }
   ]
 };
-
-/* ================= CONSTANTS ================= */
 const NODE_W=150,NODE_H=65,V_GAP=100,H_GAP=40;
 
-/* ================= LAYOUT ================= */
+/* ================= LAYOUT ENGINE ================= */
 function layout(node,depth=0){
   node.children=node.children||[];
   const kids=node.children.map(c=>layout(c,depth+1));
@@ -177,6 +545,8 @@ function position(node,x){
   node.x=x+node.totalW/2-NODE_W/2;
   node.y=node.depth*(NODE_H+V_GAP);
 }
+
+/* ================= PROCESS ================= */
 const tree=layout(rawData);
 position(tree,0);
 
@@ -191,11 +561,12 @@ const nodes=[],edges=[];
 })(tree);
 
 /* ================= BOUNDS ================= */
-const minX=Math.min(...nodes.map(n=>n.x))-200;
-const minY=Math.min(...nodes.map(n=>n.y))-200;
-const maxX=Math.max(...nodes.map(n=>n.x+NODE_W))+200;
-const maxY=Math.max(...nodes.map(n=>n.y+NODE_H))+200;
+const minX=Math.min(...nodes.map(n=>n.x))-300;
+const minY=Math.min(...nodes.map(n=>n.y))-300;
+const maxX=Math.max(...nodes.map(n=>n.x+NODE_W))+300;
+const maxY=Math.max(...nodes.map(n=>n.y+NODE_H))+300;
 
+/* ================= CANVAS ================= */
 const canvas=document.getElementById("canvas");
 canvas.style.width=(maxX-minX)+"px";
 canvas.style.height=(maxY-minY)+"px";
@@ -222,7 +593,7 @@ edges.forEach(e=>{
 nodes.forEach(n=>{
   const d=document.createElement("div");
   d.className="node";
-  if(n.type==="prophet")d.classList.add("prophet");
+  if(n.type==="prophet") d.classList.add("prophet");
   d.style.left=(n.x-minX)+"px";
   d.style.top=(n.y-minY)+"px";
   d.style.background=color(n.type);
@@ -230,22 +601,13 @@ nodes.forEach(n=>{
   d.textContent=n.name;
   d.onclick=e=>{
     e.stopPropagation();
-    drawer.style.display="flex";
-    dTitle.textContent=n.name;
-    dInfo.textContent=n.details?.info||"এই নোডের জন্য অতিরিক্ত তথ্য নেই।";
-    dChildren.innerHTML="";
-    n.children.forEach(c=>{
-      const b=document.createElement("span");
-      b.className="badge";
-      b.textContent=c.name;
-      dChildren.appendChild(b);
-    });
+    openDrawer(n);
   };
   canvas.appendChild(d);
 });
 
-/* ================= PAN / ZOOM ================= */
-let scale=.6,ox=200,oy=120,drag=false,sx,sy;
+/* ================= PAN + ZOOM ================= */
+let scale=.6,ox=300,oy=160,drag=false,sx,sy;
 function update(){canvas.style.transform=`translate(${ox}px,${oy}px) scale(${scale})`}
 update();
 
@@ -253,7 +615,26 @@ container.onmousedown=e=>{drag=true;container.classList.add("dragging");sx=e.cli
 container.onmousemove=e=>{if(drag){ox=e.clientX-sx;oy=e.clientY-sy;update()}};
 container.onmouseup=()=>{drag=false;container.classList.remove("dragging")};
 container.onmouseleave=()=>drag=false;
-container.onwheel=e=>{e.preventDefault();scale=Math.max(.05,Math.min(3,scale-e.deltaY*0.001));update()};
+container.onwheel=e=>{
+  e.preventDefault();
+  scale=Math.max(.05,Math.min(3,scale-e.deltaY*0.001));
+  update();
+};
+
+/* ================= DRAWER ================= */
+function openDrawer(n){
+  drawer.style.display="flex";
+  dTitle.textContent=n.name;
+  dInfo.textContent=n.details?.info||"এই নোডের জন্য অতিরিক্ত তথ্য নেই।";
+  dChildren.innerHTML="";
+  (n.children||[]).forEach(c=>{
+    const b=document.createElement("span");
+    b.className="badge";
+    b.textContent=c.name;
+    dChildren.appendChild(b);
+  });
+}
+function closeDrawer(){drawer.style.display="none"}
 
 /* ================= COLOR ================= */
 function color(t){
@@ -262,9 +643,13 @@ function color(t){
     bayidah:"#9333EA",
     ariba:"#407cde",
     mustariba:"#EA580C",
-    prophet:"#047857"
+    prophet:"#047857",
+    "prophet-line":"#10b981",
+    "prophet-ancestor":"#10b981",
+    "gap-green":"#a7f3d0"
   }[t]||"#64748b";
 }
 </script>
+
 </body>
 </html>
